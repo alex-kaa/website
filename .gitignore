@@ -1,0 +1,10 @@
+# To be published after talking to RNC.
+photography*
+
+## Garbage.
+# JetBrains.
+.idea
+# Tern.
+.tern*
+# My own.
+my_temp*
