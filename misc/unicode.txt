@@ -2,3 +2,4 @@ Unicode in sigils.
 V̅ U+305 combining over-line.
 × U+d7  multiplication sign.
 γ U+3b3 greek small letter gamma.
+μ U+3bc greek small letter mu.

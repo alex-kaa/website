@@ -9,8 +9,10 @@
 
 
 // --------------- Creation section ---------------
+const particlesArray = [];
+
 // Create a particle.
-const particle = (x, y, r, vx, vy) => ({
+const particlePush = (x, y, r, vx, vy) => particlesArray.push({
     coord: V.Vector( x, y ),
     radius: r,
     mass: ( r**3 * Math.PI * 4/3 ),
@@ -18,59 +20,50 @@ const particle = (x, y, r, vx, vy) => ({
 });
 
 // Create a random particle.
-const randomParticle = () => particle(
+const addRandomParticle = () => particlePush(
     rnd(ctx.width), rnd(ctx.height),
     rnd(2, 20),
     rnd(5, -5), rnd(5, -5)
 );
 
-// Create an array of n random particles.
-const particlesArray = [];
+// // Create a dot: a particle with radius = 0.5
+// // TODO: Rename Dot.
+// const randomDot = () => particlePush(
+//     rnd(ctx.width), rnd(ctx.height),
+//     0.5,
+//     rnd(5, -5), rnd(5, -5)
+// );
 
-const addRandomParticles = (n) => {
-    for (let a = 0; a < n; a++) {
-        particlesArray.push(randomParticle());
-    };
-};
+// // Create an array of n random dots.
+// const dotsArray = [];
 
-// Create a dot: a particle with radius = 0.5
-// TODO: Rename Dot. Or something.
-const randomDot = () => particle(
-    rnd(ctx.width), rnd(ctx.height),
-    0.5,
-    rnd(5, -5), rnd(5, -5)
-);
-
-// Create an array of n random dots.
-const dotsArray = [];
-
-const addRandomDots = (n) => {
-    for (let a = 0; a < n; a++) {
-        dotsArray.push(randomDot());
-    };
-};
+// const addRandomDots = (n) => {
+//     for (let a = 0; a < n; a++) {
+//         dotsArray.push(randomDot());
+//     };
+// };
 
 
 // --------------- Movement section ---------------
 // Moving is merely changing position.
 
-// TODO: make a proper 'move' function.
-const moveP = (p, v) => ( p.coord = V.Add( p.coord, v ));
+const move = (pos, vel) => V.Add(pos, vel);
 
 const moveAll = (arr) => {
     for (let p of arr) {
-        moveP(p, p.velocity);
+        p.coord = move( p.coord, p.velocity);
     };
 };
 
 
 // --------------- Forces section ---------------
-// A force is a vector.
+// A force is a vector. TODO: take inputs from html.
 
-// Friction coefficient. TODO: take as input.
-let fricK = 0.01;
-// Friction force; depends on current velocity. TODO: stop at treshold speed.
-const friction = (vel, k) => V.Mult(vel, -k);
+// Friction coefficient.
+let μ = 0.01;
+// TODO: friction force is wrong.
+// TODO: stop at treshold speed.
+// const friction = (vel, k) => V.Mult(vel, -k);
 
 // ----- Gravity subsection -----
 // Gravitational constant.
@@ -80,18 +73,25 @@ const γ = 10**-2;
 // Downwards gravity.
 const downG = V.Vector( 0, γ );
 
-// Centre-pointing gravity (like a black hole).
+// Centripetal gravity (like a black hole).
 // Depends on current position of a particle.
 // TODO: ctx.centre
 const centreG = (pos) => V.Mult( V.Inv2P(pos, ctx.centre), γ );
 
 // Universal gravity.
-// F = γ * m1 * m2 / l^2
-// TODO: the force is reciprocal for both particles.
+// |F| = γ * m1 * m2 / l^2
+// TODO: to think: the force is reciprocal for both particles.
 const univG = (a, b) => V.Mult( V.Inv2P(a, b), (γ * a.mass * b.mass) );
 
 
 // --------------- Collisions section ---------------
+// Collisions with borders.
+const borderTouch = (p) => {
+    if (( p.coord.x < 0 ) || ( p.coord.x > ctx.width )) { p.velocity.x *= -1; }
+    if (( p.coord.y < 0 ) || ( p.coord.y > ctx.height )) { p.velocity.y *= -1; }
+};
+
+// Collisions with each other.
 const twoParticlesInteract = (a, b) => {
 
     // Interaction vector.
@@ -99,17 +99,19 @@ const twoParticlesInteract = (a, b) => {
     const treshold = a.radius + b.radius;
 
     if ( V.Length(interV) <= treshold ) {
-        // TODO: a momentum could be used here also. To think.
-        const massRatio = 1 / (a.mass + b.mass);
+        // TODO: shouldn't a momentum be used here as well?
 
-        // Un-stuck the particles.
+        // Un-stick the particles.
         // inV vector: how deep the particles have moved into each other.
         const inV = V.Mult( V.Unit(interV),
-                            (treshold - V.Length(interV)) );
+                            ((treshold + 1) - V.Length(interV)));
+
         // outV: a vector to move a particle out.
-        const outV = (p) => V.Mult(inV, (massRatio * p.mass * 1.1) ); // TODO: check if particles get stuck.
-        move(a.coord, outV(b)); // TODO: change to moveP.
-        move(b.coord, outV(a));
+        const massRatio = 1 / (a.mass + b.mass);
+        const outV = (p) => V.Mult(inV, (massRatio * p.mass) ); // TODO: check if particles get stuck.
+
+        a.coord = move( a.coord, outV(b) );
+        b.coord = move( b.coord, outV(a) );
 
         // Changing particles velocity after collision.
         const momentum = (p) => V.Mult( p.velocity, p.mass );
@@ -126,6 +128,61 @@ const twoParticlesInteract = (a, b) => {
     }
 };
 
+
+// --------------- Inputs and events section ---------------
+
+// ----- Buttons and sliders subsection -----
+const addEventToTags = (className, tagName, event, f) => {
+
+    const elems = document.getElementsByClassName(className);
+    for (let el of elems) {
+
+        const tags = el.getElementsByTagName(tagName);
+        for (let t of tags) {
+            t.addEventListener(event, f);
+        }
+    }
+};
+
+// Presets.
+const idValueSet = (idElem, number) => document.getElementById(idElem).value = number;
+const idChechedSet = (idElem, bool) => document.getElementById(idElem).checked = bool;
+
+const setForces = (fr, dg, cg, ug, bd) => {
+    idValueSet("frictionSlider", fr);
+    idValueSet("downGravSlider", dg);
+    idValueSet("centreGravSlider", cg);
+    idValueSet("univGravSlider", ug);
+    idChechedSet("bordersCheckbox", bd);
+};
+
+const applyPreset = (presetName) => {
+    switch (presetName) {
+    case "gas":
+        setForces(0, 0, 0, 0, 1); break;
+    case "planets":
+        setForces(0, 0, 0, 9, 0); break;
+    case "balls":
+        setForces(5, 9, 0, 0, 1); break;
+    case "billiards":
+        setForces(1, 0, 0, 0, 1); break;
+    }
+};
+
+// Sliders.
+// TODO: the wheel acceleration does not work in all browsers. Rework.
+const scroll = (e) => (
+    e.target.valueAsNumber += ( e.deltaY / -Math.abs(e.deltaY) )
+);
+addEventToTags("slider", "input", "wheel", scroll);
+
+// 'Random' button.
+addEventToTags("button_add-random", "button", "click", addRandomParticle);
+
+// TODO: Start/stop button.
+
+// ----- Mouse controls subsection -----
+// TODO.
 
 // --------------- Actions section ---------------
 
