@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <!-- TODO:viewport -->
-  <!-- <script defer type="module" src="./javascript/collisions.js"></script> -->
+  <script defer src="./javascript/collisions.js"></script>
+  <link rel="stylesheet" href="./css/stylesheet.css">
   <title>Particle collisions</title>
 </head>
 
@@ -35,7 +36,7 @@
     <!-- Friction. -->
     <div class="controls__item">
       <div class="slider">
-        <label for="frictionSlider">Friction coefficient</label>
+        <label for="frictionSlider">Friction</label>
         <input id="frictionSlider" type="range" min="0" max="9" value="0" />
       </div>
     </div>
@@ -70,7 +71,15 @@
     <div class="controls__item">
       <div class="on-off">
         <label for="bordersCheckbox">Borders</label>
-        <input id="bordersCheckbox" type="checkbox" />
+        <input id="bordersCheckbox" type="checkbox" checked />
+      </div>
+    </div>
+
+    <!-- Trail. -->
+    <div class="controls__item">
+      <div class="on-off">
+        <label for="trailCheckbox">Trail</label>
+        <input id="trailCheckbox" type="checkbox" />
       </div>
     </div>
 
@@ -93,11 +102,6 @@
         <button>Start</button>
       </div>
     </div>
-
-<!-- Testing -->
-<script>
-
-</script>
 
   </div>
 </body>
