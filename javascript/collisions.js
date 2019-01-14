@@ -1,7 +1,8 @@
 "use strict"
 // TODO: import V from ./vectors.js and everything else.
 // --------------- Import section ---------------
-import "./vectors.js";
+import * as V from  "./vectors.js";
+import * as F from "./useful-functions.js";
 
 
 // --------------- Canvas section ---------------
@@ -11,9 +12,9 @@ const ctx = cnv.getContext('2d');
 
 const canvasSize = () => {
 
-    if (( cnv.width !== html.clientWidth ) || ( cnv.height !== html.clientHeight )) {
-        cnv.width = html.clientWidth,
-        cnv.height = html.clientHeight,
+    if (( cnv.width !== F.html.clientWidth ) || ( cnv.height !== F.html.clientHeight )) {
+        cnv.width = F.html.clientWidth,
+        cnv.height = F.html.clientHeight,
         cnv.centre = V.Vector( (cnv.width / 2), (cnv.height / 2) );
     }
 };
@@ -37,19 +38,19 @@ const particlePush = (x, y, r, vx, vy, clr) => {
 
 // Create a random particle.
 const addRandomParticle = () => particlePush(
-    rnd(cnv.width), rnd(cnv.height),
-    rnd(3, 20),
-    rnd(1, -1), rnd(1, -1),
-    rndRGB()
+    F.rnd(cnv.width), F.rnd(cnv.height),
+    F.rnd(3, 20),
+    F.rnd(1, -1), F.rnd(1, -1),
+    F.rndRGB()
 );
 
 // // Create a dot: a particle with radius = 0.5
 // // TODO: Rename Dot.
 // const randomDot = () => particlePush(
-//     rnd(cnv.width), rnd(cnv.height),
+//     F.rnd(cnv.width), F.rnd(cnv.height),
 //     0.5,
-//     rnd(5, -5), rnd(5, -5),
-//     rndRGB()
+//     F.rnd(5, -5), F.rnd(5, -5),
+//     F.rndRGB()
 // );
 
 // // Create an array of n random dots.
@@ -71,27 +72,27 @@ const moveParticle = (p) => p.coord = V.Add( p.coord, V.Mult(p.velocity, 1) );
 // A force is a vector.
 
 // Friction. Depends on velocity. TODO: still wrong.
-const fricK = () => idNumberGet("frictionSlider") * 0.01;
+const fricK = () => F.idNumberGet("frictionSlider") * 0.01;
 const fricF = (vel) => V.Mult( vel, -fricK() );
 
 
 // ----- Gravity subsection -----
 // Downwards gravity.
-const downK = () => idNumberGet("downGravSlider") * 0.01;
+const downK = () => F.idNumberGet("downGravSlider") * 0.01;
 const downG = () => V.Vector( 0, downK() );
 
 
 // Centripetal gravity (like a black hole).
 // Depends on current position of a particle.
 // TODO: goes wild when close to the centre.
-const centreK = () => idNumberGet("centreGravSlider") * 50;
+const centreK = () => F.idNumberGet("centreGravSlider") * 50;
 const centreG = (pos) => V.Mult( V.InvSq2P(cnv.centre, pos),
                                  centreK() );
 
 // Universal gravity.
 // Depends on masses of particles and distance between them.
 // |F| = γ * m1 * m2 / l^2
-const univK = () => idNumberGet("univGravSlider") * 0.01;
+const univK = () => F.idNumberGet("univGravSlider") * 0.01;
 const univG = (a, b) => V.Mult( V.InvSq2P(a.coord, b.coord),
                                 ( univK() * a.mass * b.mass ));
 
@@ -199,18 +200,18 @@ const sidebarClose = (e) => {
     document.getElementById("sidebarHandle").innerHTML = "«";
 };
 
-addEventToId("sidebarControls", "mouseenter", sidebarOpen);
-addEventToId("sidebarControls", "mouseleave", sidebarClose);
+F.addEventToId("sidebarControls", "mouseenter", sidebarOpen);
+F.addEventToId("sidebarControls", "mouseleave", sidebarClose);
 
 
 // ----- Buttons and sliders subsection -----
 // Presets.
 const setForces = (fr, dg, cg, ug, bd) => {
-    idValueSet("frictionSlider", fr);
-    idValueSet("downGravSlider", dg);
-    idValueSet("centreGravSlider", cg);
-    idValueSet("univGravSlider", ug);
-    idCheckedSet("bordersCheckbox", bd);
+    F.idValueSet("frictionSlider", fr);
+    F.idValueSet("downGravSlider", dg);
+    F.idValueSet("centreGravSlider", cg);
+    F.idValueSet("univGravSlider", ug);
+    F.idCheckedSet("bordersCheckbox", bd);
 };
 
 const applyPreset = (e) => {
@@ -225,7 +226,7 @@ const applyPreset = (e) => {
         setForces(1, 0, 0, 0, 1); break;
     }
 };
-addEventToTags("dropdown", "select", "click", applyPreset);
+F.addEventToTags("dropdown", "select", "click", applyPreset);
 
 // Sliders.
 // TODO: the wheel acceleration does not work in all browsers. Rework.
@@ -233,17 +234,17 @@ addEventToTags("dropdown", "select", "click", applyPreset);
 const scroll = (e) => (
     e.target.valueAsNumber += ( e.deltaY / -Math.abs(e.deltaY) )
 );
-addEventToTags("slider", "input", "wheel", scroll);
+F.addEventToTags("slider", "input", "wheel", scroll);
 
 // 'Random' button.
-addEventToTags("button_add-random", "button", "click", addRandomParticle);
+F.addEventToTags("button_add-random", "button", "click", addRandomParticle);
 
 // Start/stop button.
 const startStopButton = (e) => {
     if (e.target.innerHTML === "Stop") { e.target.innerHTML = "Start"; }
     else { e.target.innerHTML = "Stop"; }
 };
-addEventToTags("button_start", "button", "click", startStopButton);
+F.addEventToTags("button_start", "button", "click", startStopButton);
 
 
 // ----- Mouse controls subsection -----
@@ -283,7 +284,7 @@ const drawParticle = (p) => (
 
 const drawAll = () => {
 
-    if ( !idCheckedGet("trailCheckbox") ) { ctx.clearRect(0, 0, cnv.width, cnv.height); }
+    if ( !F.idCheckedGet("trailCheckbox") ) { ctx.clearRect(0, 0, cnv.width, cnv.height); }
 
     particlesArray.map(drawParticle);
 };
@@ -291,14 +292,14 @@ const drawAll = () => {
 
 // --------------- Action! ---------------
 const applyAll = () => (
-    combineByTwo(particlesArray, twoParticlesInteract),
+    F.combineByTwo(particlesArray, twoParticlesInteract),
     particlesArray.map(applySimpleForces),
     particlesArray.map(moveParticle)
 );
 
 const action = () => {
-    if ( idCheckedGet("bordersCheckbox")) { particlesArray.map(borderTouch); }
-    if ( innerHtmlGet("button_start", "button") === "Stop" ) { applyAll(); }
+    if ( F.idCheckedGet("bordersCheckbox")) { particlesArray.map(borderTouch); }
+    if ( F.innerHtmlGet("button_start", "button") === "Stop" ) { applyAll(); }
 
     canvasSize();
     drawAll();

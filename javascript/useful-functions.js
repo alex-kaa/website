@@ -1,14 +1,13 @@
-// TODO: export
 // Randomising functions.
-const rnd = (max, min = 0) => ( (Math.random() * (max - min)) + min );
+export const rnd = (max, min = 0) => ( (Math.random() * (max - min)) + min );
 
-const rndColor = () => Math.floor(rnd(255));
+export const rndColor = () => Math.floor(rnd(255));
 
-const rndRGB = () => (
+export const rndRGB = () => (
     'rgb( ' + rndColor() + ', ' + rndColor() + ', ' + rndColor() + ' )'
 );
 
-const combineByTwo = (arr, f) => {
+export const combineByTwo = (arr, f) => {
     for (let n = 0; n < arr.length; n++) {
         for (let m = (n + 1); m < arr.length; m++) {
             f( arr[n], arr[m] );
@@ -17,12 +16,12 @@ const combineByTwo = (arr, f) => {
 };
 
 // Working with DOM.
-const html = document.firstElementChild;
+export const html = document.firstElementChild;
 
-const addEventToId = (IdName, event, f) => document.getElementById(IdName).addEventListener(event, f);
-const removeEventFromId = (IdName, event, f) => document.getElementById(IdName).removeEventListener(event, f);
+export const addEventToId = (IdName, event, f) => document.getElementById(IdName).addEventListener(event, f);
+export const removeEventFromId = (IdName, event, f) => document.getElementById(IdName).removeEventListener(event, f);
 
-const addEventToTags = (className, tagName, event, f) => {
+export const addEventToTags = (className, tagName, event, f) => {
 
     const classes = document.getElementsByClassName(className);
     for (let el of classes) {
@@ -34,7 +33,7 @@ const addEventToTags = (className, tagName, event, f) => {
     }
 };
 
-const removeEventFromTags = (className, tagName, event, f) => {
+export const removeEventFromTags = (className, tagName, event, f) => {
 
     const classes = document.getElementsByClassName(className);
     for (let el of classes) {
@@ -46,14 +45,14 @@ const removeEventFromTags = (className, tagName, event, f) => {
     }
 };
 
-const idValueGet = (idElem) => document.getElementById(idElem).value;
-const idNumberGet = (idElem) => document.getElementById(idElem).valueAsNumber;
-const idCheckedGet = (idElem) => document.getElementById(idElem).checked;
+export const idValueGet = (idElem) => document.getElementById(idElem).value;
+export const idNumberGet = (idElem) => document.getElementById(idElem).valueAsNumber;
+export const idCheckedGet = (idElem) => document.getElementById(idElem).checked;
 
-const idValueSet = (idElem, value) => document.getElementById(idElem).value = value;
-const idCheckedSet = (idElem, bool) => document.getElementById(idElem).checked = bool;
+export const idValueSet = (idElem, value) => document.getElementById(idElem).value = value;
+export const idCheckedSet = (idElem, bool) => document.getElementById(idElem).checked = bool;
 
-const innerHtmlGet = (className, tagName) => {
+export const innerHtmlGet = (className, tagName) => {
 
     const classes = document.getElementsByClassName(className);
     for (let el of classes) {
@@ -65,7 +64,7 @@ const innerHtmlGet = (className, tagName) => {
     }
 };
 
-const innerHtmlSet = (className, tagName, text) => {
+export const innerHtmlSet = (className, tagName, text) => {
 
     const classes = document.getElementsByClassName(className);
     for (let el of classes) {
