@@ -5,7 +5,7 @@ const rnd = (max, min = 0) => ( (Math.random() * (max - min)) + min );
 const rndColor = () => Math.floor(rnd(255));
 
 const rndRGB = () => (
-    '"rgb( ' + rndColor() + ', ' + rndColor() + ', ' + rndColor() + ' )"'
+    'rgb( ' + rndColor() + ', ' + rndColor() + ', ' + rndColor() + ' )'
 );
 
 const combineByTwo = (arr, f) => {
@@ -17,6 +17,11 @@ const combineByTwo = (arr, f) => {
 };
 
 // Working with DOM.
+const html = document.firstElementChild;
+
+const addEventToId = (IdName, event, f) => document.getElementById(IdName).addEventListener(event, f);
+const removeEventFromId = (IdName, event, f) => document.getElementById(IdName).removeEventListener(event, f);
+
 const addEventToTags = (className, tagName, event, f) => {
 
     const classes = document.getElementsByClassName(className);
