@@ -21,6 +21,11 @@ const combineByTwo = (arr, f) => {
 };
 
 // Working with DOM.
+const html = document.firstElementChild;
+
+const addEventToId = (IdName, event, f) => document.getElementById(IdName).addEventListener(event, f);
+const removeEventFromId = (IdName, event, f) => document.getElementById(IdName).removeEventListener(event, f);
+
 const addEventToTags = (className, tagName, event, f) => {
 
     const classes = document.getElementsByClassName(className);
@@ -76,9 +81,6 @@ const innerHtmlSet = (className, tagName, text) => {
     }
 };
 
-// const ctx = { width: 300, height: 300 };
-// ctx.centre = (ctx) => V.Vector( (ctx.width / 2), (ctx.height / 2) );
-
 // --------------- Vectors section ---------------
 const V = {
     // ---------- Creating vectors.
@@ -126,11 +128,18 @@ const V = {
     },
 
 
-    // ---------- Inverse-square.
+    // ---------- Inverse and inverse-square.
+    // Inverse vector.
+    // I̅ = V̅ / |V̅|
+    // TODO: special case where V.Length(v) = 0. Check.
+    Inv: (v) => V.Mult( V.Unit(v),
+                        (1 / (V.Length(v))) ),
+
+
     // Inverse-square vector.
     // I̅ = V̅ / |V̅|^2
     // TODO: special case where V.Length(v) = 0. Check.
-    Inv: (v) => V.Mult( V.Unit(v),
+    InvSq: (v) => V.Mult( V.Unit(v),
                         (1 / (V.Length(v))**2) ),
 
 
@@ -145,7 +154,7 @@ const V = {
 
     // Inverse-square vector between two points.
     // TODO: special case where V.Length(v) = 0.
-    Inv2P: (posA, posB) => V.Inv( V.V2P(posA, posB)),
+    InvSq2P: (posA, posB) => V.InvSq( V.V2P(posA, posB)),
 
 
     // ---------- Dot product and projections.
@@ -173,26 +182,36 @@ const V = {
 // Canvas.
 const cnv = document.getElementById('collider');
 const ctx = cnv.getContext('2d');
-ctx.width = cnv.width;
-ctx.height = cnv.height;
-ctx.centre = V.Vector( (ctx.width / 2), (ctx.height / 2) );
+
+const canvasSize = () => {
+
+    if (( cnv.width !== html.clientWidth ) || ( cnv.height !== html.clientHeight )) {
+        cnv.width = html.clientWidth,
+        cnv.height = html.clientHeight,
+        cnv.centre = V.Vector( (cnv.width / 2), (cnv.height / 2) );
+    }
+};
 
 
 // --------------- Creation section ---------------
 const particlesArray = [];
 
+// const massesMatrix = [];        // Maybe later.
+
 // Create a particle.
-const particlePush = (x, y, r, vx, vy, clr) => particlesArray.push({
-    coord: V.Vector( x, y ),
-    radius: r,
-    mass: ( r**3 * Math.PI * 4/3 ),
-    velocity: V.Vector( vx, vy ),
-    color: clr
-});
+const particlePush = (x, y, r, vx, vy, clr) => {
+
+    particlesArray.push(
+        { coord: V.Vector( x, y ),
+          radius: r,
+          mass: ( r**3 * Math.PI * 4/3 ),
+          velocity: V.Vector( vx, vy ),
+          color: clr });
+};
 
 // Create a random particle.
 const addRandomParticle = () => particlePush(
-    rnd(ctx.width), rnd(ctx.height),
+    rnd(cnv.width), rnd(cnv.height),
     rnd(3, 20),
     rnd(1, -1), rnd(1, -1),
     rndRGB()
@@ -201,7 +220,7 @@ const addRandomParticle = () => particlePush(
 // // Create a dot: a particle with radius = 0.5
 // // TODO: Rename Dot.
 // const randomDot = () => particlePush(
-//     rnd(ctx.width), rnd(ctx.height),
+//     rnd(cnv.width), rnd(cnv.height),
 //     0.5,
 //     rnd(5, -5), rnd(5, -5),
 //     rndRGB()
@@ -225,12 +244,10 @@ const moveParticle = (p) => p.coord = V.Add( p.coord, V.Mult(p.velocity, 1) );
 // --------------- Forces section ---------------
 // A force is a vector.
 
-// Friction and downG seem to be fine;
-// TODO: centreG and univG go wild.
-
-// Friction. Depends on velocity. TODO: still wrong (or not? to check).
+// Friction. Depends on velocity. TODO: still wrong.
 const fricK = () => idNumberGet("frictionSlider") * 0.01;
 const fricF = (vel) => V.Mult( vel, -fricK() );
+
 
 // ----- Gravity subsection -----
 // Downwards gravity.
@@ -242,18 +259,18 @@ const downG = () => V.Vector( 0, downK() );
 // Depends on current position of a particle.
 // TODO: goes wild when close to the centre.
 const centreK = () => idNumberGet("centreGravSlider") * 50;
-const centreG = (pos) => V.Mult( V.Inv2P(ctx.centre, pos),
+const centreG = (pos) => V.Mult( V.InvSq2P(cnv.centre, pos),
                                  centreK() );
 
 // Universal gravity.
 // Depends on masses of particles and distance between them.
 // |F| = γ * m1 * m2 / l^2
-const univK = () => idNumberGet("univGravSlider") * 100;
-const univG = (a, b) => V.Mult( V.Inv2P(a.coord, b.coord),
+const univK = () => idNumberGet("univGravSlider") * 0.01;
+const univG = (a, b) => V.Mult( V.InvSq2P(a.coord, b.coord),
                                 ( univK() * a.mass * b.mass ));
 
-particlePush(152, 153, 20, 0, 0, "#0f0");
-particlePush(272, 152, 10, 0, -2, "#00f");
+// particlePush(151, 100, 20, 0, 0.125, "#0f0");
+// particlePush(280, 105, 10, 0, -1, "#00f");
 
 
 // ----- Applying forces -----
@@ -267,11 +284,11 @@ const applySimpleForces = (p) => (
 const applyUnivG = (a, b) => (
     a.velocity = V.Add( a.velocity,
                         V.Neg( V.Mult( univG(a, b),
-                                       (1 / (a.mass**2))))),
+                                       (1 / a.mass)))),
 
     b.velocity = V.Add( b.velocity,
                         V.Mult( univG(a, b),
-                                (1 / (b.mass**2))))
+                                (1 / b.mass)))
 );
 
 
@@ -283,8 +300,8 @@ const borderTouch = (p) => {
         p.coord.x = p.radius;
         p.velocity.x *= -1;
 
-    } else if ((p.coord.x + p.radius) > ctx.width) {
-        p.coord.x = ctx.width - p.radius;
+    } else if ((p.coord.x + p.radius) > cnv.width) {
+        p.coord.x = cnv.width - p.radius;
         p.velocity.x *= -1;
     }
 
@@ -292,14 +309,15 @@ const borderTouch = (p) => {
         p.coord.y = p.radius;
         p.velocity.y *= -1;
 
-    } else if ((p.coord.y + p.radius) > ctx.height) {
-        p.coord.y = ctx.height - p.radius;
+    } else if ((p.coord.y + p.radius) > cnv.height) {
+        p.coord.y = cnv.height - p.radius;
         p.velocity.y *= -1;
     }
 };
 
 
 // Collisions with each other.
+// TODO: think of something interesting upon collision.
 // TODO: see if using momenta would be better.
 const twoParticlesInteract = (a, b) => {
 
@@ -324,34 +342,41 @@ const twoParticlesInteract = (a, b) => {
         // Changing velocities of particles after collision.
         const massesCentreV = V.Add( V.Mult( a.velocity, massRatio(a) ),
                                      V.Mult( b.velocity, massRatio(b) ));
+
         const massesCentreProj = V.Proj( massesCentreV, interV );
 
         const newVelocityProj = (p) => V.Sub( massesCentreProj,
                                               V.Proj(p.velocity, interV));
+
         const newVelocity = (p) => V.Sum( newVelocityProj(p),
                                           V.Norm( p.velocity, interV ),
                                           massesCentreProj);
 
-        // console.log("V.Norm( a.velocity, interV )", V.Norm( a.velocity, interV ));
-        // console.log("V.Norm( b.velocity, interV )", V.Norm( b.velocity, interV ));
-        
-        // console.log("massesCentreV", massesCentreV);
-        // console.log("massesCentreProj", massesCentreProj);
-
-        // console.log("newVelocityProj(a)", newVelocityProj(a));
-        // console.log("newVelocityProj(b)", newVelocityProj(b));
-
-        // console.log("newVelocity(a)", newVelocity(a));
-        // console.log("newVelocity(b)", newVelocity(b));
-        
         a.velocity = newVelocity(a);
         b.velocity = newVelocity(b);
 
-    }
+    } else { applyUnivG(a, b); }
+
 };
 
 
 // --------------- Inputs and events section ---------------
+// ----- Sidebar subsection -----
+const sidebarOpen = (e) => {
+    e.target.style.transform = "translateX(0%)";
+    e.target.style.transition = "transform 0.5s";
+    document.getElementById("sidebarHandle").innerHTML = "»";
+};
+
+const sidebarClose = (e) => {
+    e.target.style.transform = "translateX(88%)";
+    document.getElementById("sidebarHandle").innerHTML = "«";
+};
+
+addEventToId("sidebarControls", "mouseenter", sidebarOpen);
+addEventToId("sidebarControls", "mouseleave", sidebarClose);
+
+
 // ----- Buttons and sliders subsection -----
 // Presets.
 const setForces = (fr, dg, cg, ug, bd) => {
@@ -420,46 +445,37 @@ const drawV = (start, vector, color) => (
 
 const drawParticle = (p) => (
     ctx.save(),
+    ctx.strokeStyle = p.color,
     ctx.fillStyle = p.color,
     ctx.beginPath(),
     ctx.arc(p.coord.x, p.coord.y, p.radius, Math.PI * 2, false),
+    // ctx.rect(p.coord.x, p.coord.y, 1, 1),
+    // ctx.stroke(),
     ctx.fill(),
     ctx.restore
 );
 
 const drawAll = () => {
-    if ( !idCheckedGet("trailCheckbox") ) { ctx.clearRect(0, 0, ctx.width, ctx.height); }
+
+    if ( !idCheckedGet("trailCheckbox") ) { ctx.clearRect(0, 0, cnv.width, cnv.height); }
+
     particlesArray.map(drawParticle);
 };
-
-const drawCentre = () => (      // TEST
-    ctx.save(),
-    ctx.fillStyle = "#fff",
-    ctx.beginPath(),
-    ctx.rect(150, 150, 1, 1),
-    ctx.fill(),
-    ctx.restore
-);
 
 
 // --------------- Action! ---------------
 const applyAll = () => (
-
     combineByTwo(particlesArray, twoParticlesInteract),
-
     particlesArray.map(applySimpleForces),
-    combineByTwo(particlesArray, applyUnivG),
-
-    particlesArray.map(moveParticle),
-
-    drawAll()
+    particlesArray.map(moveParticle)
 );
 
 const action = () => {
     if ( idCheckedGet("bordersCheckbox")) { particlesArray.map(borderTouch); }
     if ( innerHtmlGet("button_start", "button") === "Stop" ) { applyAll(); }
+
+    canvasSize();
     drawAll();
-    drawCentre();               // TEST
     window.requestAnimationFrame(action);
 };
 action();

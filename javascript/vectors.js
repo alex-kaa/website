@@ -50,15 +50,16 @@ const Unit = (v) => {     // TODO: special case where V.Length(v) = 0.
 
 
 // ---------- Inverse-square.
+// Inverse vector.
+// I̅ = V̅ / |V̅|
+const Inv = (v) => Mult( Unit(v), (1 / Length(v)) );
+
 // Inverse-square vector.
 // I̅ = V̅ / |V̅|^2
-const Inv = (v) => {
-    if (Length(v) <= 1) { return Vector(0, 0); }
-    else { return Mult( Unit(v), (1 / Length(v))**2 ); }
-};
+const InvSq = (v) => Mult( Unit(v), (1 / Length(v))**2 );
 
 // Inverse-square vector between two points.
-const Inv2P = (posA, posB) => Inv( V2P(posA, posB));
+const Inv2P = (posA, posB) => InvSq( V2P(posA, posB));
 
 
 // ---------- Dot product and projections.

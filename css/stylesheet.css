@@ -1,8 +1,34 @@
 body {
-color: white;
-background-color: black;
+    color: white;
+    background-color: black;
+
+    margin: 0;
+    overflow: hidden;
+    display: flex;
 }
 
-#collider {
-border: solid thin gray;
+.canvas {
+}
+
+.sidebar {
+
+    position: absolute;
+    align-self: center;
+    right: 0;
+
+    transform: translateX(88%);
+    -webkit-transform: translateX(88%);
+
+    display: flex;
+    flex-flow: row wrap;
+}
+
+#sidebarHandle {
+    padding: 0.5rem;
+    font-size: 2rem;
+    align-self: center;
+}
+
+.controls {
+    padding: 0.5rem;
 }

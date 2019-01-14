@@ -10,99 +10,98 @@
 
 <body>
 
-  <div class="canvas">          <!-- TODO check name collisions -->
-    <canvas id="collider" width="300" height="300"></canvas>
-  </div>
+  <!-- Canvas. -->
+  <canvas id="collider"></canvas>
 
-  <!-- Controls section. -->
-  <div class="controls">
 
-    <div class="controls__heading">
-      <div class="heading">Controls</div>
-    </div>
+  <!-- Sidebar. -->
+  <div class="sidebar" id="sidebarControls">
+    <div id="sidebarHandle">«</div>
 
-    <!-- Presets. -->
-    <div class="controls__item_presets">
-      <div class="dropdown">
-        <select name="presets">
-          <option value="gas">Gas</option>
-          <option value="planets">Planets</option>
-          <option value="balls">Falling balls</option>
-          <option value="billiards">Billiards</option>
-        </select>
+    <!-- Controls section. -->
+    <div class="controls" id="controlsSection">
+
+      <div class="controls__heading">
+        <div class="heading">Controls</div>
       </div>
-    </div>
 
-    <!-- Friction. -->
-    <div class="controls__item">
-      <div class="slider">
-        <label for="frictionSlider">Friction</label>
-        <input id="frictionSlider" type="range" min="0" max="9" value="0" />
+      <!-- Presets. -->
+      <div class="controls__item_presets">
+        <div class="dropdown">
+          <select name="presets">
+            <option value="gas">Gas</option>
+            <option value="planets">Planets</option>
+            <option value="balls">Falling balls</option>
+            <option value="billiards">Billiards</option>
+          </select>
+        </div>
       </div>
-    </div>
 
-    <!-- Gravity. -->
-    <div class="controls__sub-heading">
-      <div class="sub-heading">Gravity controls</div>
-    </div>
-
-    <div class="controls__item">
-      <div class="slider">
-        <label for="downGravSlider">Downwards</label>
-        <input id="downGravSlider" type="range" min="0" max="9" value="0" />
+      <!-- Friction. -->
+      <div class="controls__item">
+        <div class="slider">
+          <label for="frictionSlider">Friction</label>
+          <input id="frictionSlider" type="range" min="0" max="9" value="0" />
+        </div>
       </div>
-    </div>
 
-    <div class="controls__item">
-      <div class="slider">
-        <label for="centreGravSlider">Centripetal</label>
-        <input id="centreGravSlider" type="range" min="0" max="9" value="0" />
+      <!-- Gravity. -->
+      <div class="controls__sub-heading">
+        <div class="sub-heading">Gravity controls</div>
       </div>
-    </div>
 
-    <div class="controls__item">
-      <div class="slider">
-        <label for="univGravSlider">Universal</label>
-        <input id="univGravSlider" type="range" min="0" max="9" value="0" />
+      <div class="controls__item">
+        <div class="slider">
+          <label for="downGravSlider">Downwards</label>
+          <input id="downGravSlider" type="range" min="0" max="9" value="0" />
+        </div>
       </div>
-    </div>
 
-    <!-- Borders. -->
-    <div class="controls__item">
-      <div class="on-off">
-        <label for="bordersCheckbox">Borders</label>
-        <input id="bordersCheckbox" type="checkbox" checked />
+      <div class="controls__item">
+        <div class="slider">
+          <label for="centreGravSlider">Centripetal</label>
+          <input id="centreGravSlider" type="range" min="0" max="9" value="0" />
+        </div>
       </div>
-    </div>
 
-    <!-- Trail. -->
-    <div class="controls__item">
-      <div class="on-off">
-        <label for="trailCheckbox">Trail</label>
-        <input id="trailCheckbox" type="checkbox" />
+      <div class="controls__item">
+        <div class="slider">
+          <label for="univGravSlider">Universal</label>
+          <input id="univGravSlider" type="range" min="0" max="9" value="0" />
+        </div>
       </div>
-    </div>
 
-    <!-- Add a particle. -->
-    <div class="controls__item">
-      <div class="button_add-random">
-        <button>Add random particle</button>
+      <!-- Borders. -->
+      <div class="controls__item">
+        <div class="on-off">
+          <label for="bordersCheckbox">Borders</label>
+          <input id="bordersCheckbox" type="checkbox" checked />
+        </div>
       </div>
-    </div>
 
-    <!-- TODO; use a mouse. -->
-    <!-- <label>Position<input type="range" min="1" max="10" /></label> -->
-    <!-- <label>Size<input type="range" min="1" max="10" /></label> -->
-    <!-- <label>Velocity<input type="range" min="1" max="10" /></label> -->
-    <!-- <button>Add</button> -->
-
-    <!-- Start button. -->
-    <div class="controls__item">
-      <div class="button_start">
-        <button>Start</button>
+      <!-- Trail. -->
+      <div class="controls__item">
+        <div class="on-off">
+          <label for="trailCheckbox">Trail</label>
+          <input id="trailCheckbox" type="checkbox" />
+        </div>
       </div>
-    </div>
 
+      <!-- Add a particle. -->
+      <div class="controls__item">
+        <div class="button_add-random">
+          <button>Add random particle</button>
+        </div>
+      </div>
+
+      <!-- Start button. -->
+      <div class="controls__item">
+        <div class="button_start">
+          <button>Start</button>
+        </div>
+      </div>
+
+    </div>
   </div>
 </body>
 </html>
