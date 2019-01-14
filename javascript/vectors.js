@@ -61,7 +61,7 @@ export const Inv = (v) => Mult( Unit(v), (1 / Length(v)) );
 export const InvSq = (v) => Mult( Unit(v), (1 / Length(v))**2 );
 
 // Inverse-square vector between two points.
-export const Inv2P = (posA, posB) => InvSq( V2P(posA, posB));
+export const InvSq2P = (posA, posB) => InvSq( V2P(posA, posB));
 
 
 // ---------- Dot product and projections.
