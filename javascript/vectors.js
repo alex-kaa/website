@@ -1,7 +1,3 @@
-// TODO: wrap the whole thing in curly brackets.
-// export default {};
-
-
 // A vector is an object of the form { x: x-coordinate, y: y-coordinate }.
 
 // ---------- Creating vectors.
@@ -45,7 +41,7 @@ export const Neg = (v) => Mult(v, -1);
 
 // Unit vector (Length = 1).
 // U̅ = V̅ / |V̅|
-export const Unit = (v) => {     // TODO: special case where V.Length(v) = 0.
+export const Unit = (v) => {     // TODO: special case where Length(v) = 0.
     if (Length(v) === 0) { return Vector(0, 0); }
     else { return Mult( v, (1 / Length(v)) ); }
 };

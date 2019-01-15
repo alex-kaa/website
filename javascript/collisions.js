@@ -1,5 +1,5 @@
-"use strict"
-// TODO: import V from ./vectors.js and everything else.
+"use strict";
+
 // --------------- Import section ---------------
 import * as V from  "./vectors.js";
 import * as F from "./useful-functions.js";
@@ -40,7 +40,7 @@ const particlePush = (x, y, r, vx, vy, clr) => {
 const addRandomParticle = () => particlePush(
     F.rnd(cnv.width), F.rnd(cnv.height),
     F.rnd(3, 20),
-    F.rnd(1, -1), F.rnd(1, -1),
+    F.rnd(3, -3), F.rnd(3, -3),
     F.rndRGB()
 );
 
@@ -85,6 +85,7 @@ const downG = () => V.Vector( 0, downK() );
 // Centripetal gravity (like a black hole).
 // Depends on current position of a particle.
 // TODO: goes wild when close to the centre.
+// TODO: { x: NaN, y: NaN } when in the centre.
 const centreK = () => F.idNumberGet("centreGravSlider") * 50;
 const centreG = (pos) => V.Mult( V.InvSq2P(cnv.centre, pos),
                                  centreK() );
@@ -104,8 +105,9 @@ const univG = (a, b) => V.Mult( V.InvSq2P(a.coord, b.coord),
 const applySimpleForces = (p) => (
     p.velocity = V.Sum( p.velocity,
                         fricF(p.velocity),
-                        downG(),
-                        centreG(p.coord))
+                        downG()
+                        // centreG(p.coord)
+                      )
 );
 
 const applyUnivG = (a, b) => (
@@ -206,30 +208,80 @@ F.addEventToId("sidebarControls", "mouseleave", sidebarClose);
 
 // ----- Buttons and sliders subsection -----
 // Presets.
-const setForces = (fr, dg, cg, ug, bd) => {
+const setForces = (fr, dg, cg, ug, bd, tr) => {
     F.idValueSet("frictionSlider", fr);
     F.idValueSet("downGravSlider", dg);
     F.idValueSet("centreGravSlider", cg);
     F.idValueSet("univGravSlider", ug);
     F.idCheckedSet("bordersCheckbox", bd);
+    F.idCheckedSet("trailCheckbox", tr);
 };
 
+const createPlanets = () => (
+    particlePush( cnv.centre.x, cnv.centre.y,
+                  50,
+                  0, -0.016,
+                  "yellow" ),
+
+    particlePush( (cnv.centre.x + 100), cnv.centre.y,
+                  5,
+                  0, 7,
+                  "red" ),
+
+    particlePush( (cnv.centre.x + 150), cnv.centre.y,
+                  5,
+                  0, 6,
+                  "blue" ),
+
+    particlePush( (cnv.centre.x + 170), cnv.centre.y,
+                  3,
+                  0, 6,
+                  "cyan" ),
+
+    particlePush( (cnv.centre.x + 200), cnv.centre.y,
+                  2,
+                  0, 5.5,
+                  "green" ),
+
+    particlePush( (cnv.centre.x + 230), cnv.centre.y,
+                  3,
+                  0, 5.3,
+                  "magenta" ),
+
+    particlePush( (cnv.centre.x + 250), cnv.centre.y,
+                  2,
+                  0, 5,
+                  "pink" )
+);
+
 const applyPreset = (e) => {
+
     switch (e.target.value) {
     case "gas":
-        setForces(0, 0, 0, 0, 1); break;
+        setForces(0, 0, 0, 0, 1, 0);
+        if ( particlesArray.length < 20 ) {
+            for (let n = 0; n < 20; n++) { addRandomParticle(); }
+        };
+        break;
+
     case "planets":
-        setForces(0, 0, 0, 9, 0); break;
+        particlesArray.length = 0;
+        ctx.clearRect(0, 0, cnv.width, cnv.height);
+        setForces(0, 0, 0, 1, 0, 0);
+        createPlanets();
+        break;
+
     case "balls":
-        setForces(5, 9, 0, 0, 1); break;
+        setForces(5, 9, 0, 0, 1, 0); break;
+
     case "billiards":
-        setForces(1, 0, 0, 0, 1); break;
+        setForces(1, 0, 0, 0, 1, 0); break;
     }
 };
 F.addEventToTags("dropdown", "select", "click", applyPreset);
 
 // Sliders.
-// TODO: the wheel acceleration does not work in all browsers. Rework.
+// TODO: the wheel acceleration does not work in some browsers. Rework.
 // TODO: remove default.
 const scroll = (e) => (
     e.target.valueAsNumber += ( e.deltaY / -Math.abs(e.deltaY) )
