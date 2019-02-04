@@ -281,10 +281,6 @@ const svgTextMiddle = (x, y, text, id, color = "white") => {
 // console.log(lettersFrequency[0][0].charAt(0), lettersFrequency[0][0].charAt(1), lettersFrequency[0][1]);
 
 // --------------- Drawing section ---------------
-const fingersArr = [ "left little", "left ring", "left middle", "left index", "left reach",
-                     "right reach", "right index", "right middle", "right ring", "right little",
-                     "right little 1", "right little 2" ];
-
 const drawLetters = (layout) => {
     let x = 10, y = 10;
     const temp = [];
@@ -293,8 +289,8 @@ const drawLetters = (layout) => {
         temp.push( svgTextMiddle( x, y,
                                   layout[n],
                                   layout[n],
-                                  // "#1a0d00"
-                                  "brown"
+                                  "#1a0d00"
+                                  // "brown"
                                 ));
         x += 10;
 
@@ -308,10 +304,28 @@ const drawLetters = (layout) => {
 // TEST
 // const kbKeys = drawLetters( layoutArr("dvorak"));
 
+// TODO adjust weights, verticals are too yellow.
 const lineColor = (x1, y1, x2, y2) => {
+    let h = 120, a = 1;
 
     // Rows.
-    
+    if (y1 !== y2) {
+        if ( (y1 === 20) || (y2 === 20) ) { h -= 10; }
+        else { h -= 30; }
+    }
+
+    // Fingers.
+    if (x1 === x2) { h -= 50; }
+
+    // Blocks.
+    if ( (x1 === 50) || (x1 === 60) || (x1 > 100) ) {
+        h -= 50;
+        if ( (x2 === 50) || (x2 === 60) || (x2 > 100) ) { h = 0; }
+    }
+
+    if ( h > 100 ) { a = 0.2; }
+
+    return `hsla( ${h}, 100%, 50%, ${a})`;
 };
 
 const drawCombinations = (text, layout) => {
@@ -320,34 +334,34 @@ const drawCombinations = (text, layout) => {
 
     const letters = countLettersFrequency(text, lettersCombined(layout));
 
-    const getXY = (i, l) => [
-        Number( document.getElementById( letters[i][0].charAt(l) ).getAttributeNS(null, 'x') ),
-        Number( document.getElementById( letters[i][0].charAt(l) ).getAttributeNS(null, 'y') )
-    ];
+    const getXY = (i, l) => ({
+        x: Number( document.getElementById( letters[i][0].charAt(l) ).getAttributeNS(null, 'x') ),
+        y: Number( document.getElementById( letters[i][0].charAt(l) ).getAttributeNS(null, 'y') )
+    });
 
     const from = (i) => getXY(i, 0);
     const to = (i) => getXY(i, 1);
 
-    const dist = (i) => [
-        Math.abs( from(i)[0] - to(i)[0] ),
-        Math.abs( from(i)[1] - to(i)[1] )
-    ];
+    const dist = (i) => ({
+        x: Math.abs( from(i).x - to(i).x ),
+        y: Math.abs( from(i).y - to(i).y )
+    });
 
-    const control = (i) => [    // TODO check.
-        ( Math.max( from(i)[0], to(i)[0] ) - (dist(i)[0] / 2) ),
-        ( Math.max( from(i)[1], to(i)[1] ) - dist(i)[1] + (dist(i)[0] / 4) )
-    ];
+    const control = (i) => ({    // TODO check.
+        x: ( Math.max( from(i).x, to(i).x ) - (dist(i).x / 2) + (dist(i).y / 8) ),
+        y: ( Math.max( from(i).y, to(i).y ) - (dist(i).y / 1) + (dist(i).x / 4) )
+    });
 
     const width = (i) => 20 * ( letters[i][1] / text.length );
 
     for (let n = 0; n < letters.length; n++) {
-        svgBezierQ( from(n)[0], from(n)[1],
-                    control(n)[0], control(n)[1],
-                    to(n)[0], to(n)[1],
+        svgBezierQ( from(n).x, from(n).y,
+                    control(n).x, control(n).y,
+                    to(n).x, to(n).y,
                     width(n),
-                    // lineColor( from(n)[0], from(n)[1],
-                    //            to(n)[0], to(n)[1] ),
-                    "white",
+                    lineColor( from(n).x, from(n).y,
+                               to(n).x, to(n).y ),
+                    // "white",
                     letters[n][0] );
 
     }
