@@ -1,8 +1,8 @@
 "use strict";
 
 // --------------- Import section ---------------
-import * as V from  "./vectors.js";
-import * as F from "./useful-functions.js";
+import * as V from "../libs/vectors.js";
+import * as F from "../libs/useful-functions.js";
 
 
 // --------------- Canvas section ---------------
@@ -10,7 +10,7 @@ import * as F from "./useful-functions.js";
 const cnv = document.getElementById('collider');
 const ctx = cnv.getContext('2d');
 
-const canvasSize = () => {
+const canvasResize = () => {
 
     if (( cnv.width !== F.html.clientWidth ) || ( cnv.height !== F.html.clientHeight )) {
         cnv.width = F.html.clientWidth,
@@ -353,7 +353,7 @@ const action = () => {
     if ( F.idCheckedGet("bordersCheckbox")) { particlesArray.map(borderTouch); }
     if ( F.innerHtmlGet("button_start", "button") === "Stop" ) { applyAll(); }
 
-    canvasSize();
+    canvasResize();
     drawAll();
     window.requestAnimationFrame(action);
 };

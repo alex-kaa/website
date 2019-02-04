@@ -1,0 +1,32 @@
+body {
+/* background-color: #002800; */
+background-color: black;
+position: relative;
+overflow: hidden;
+margin: 0;
+}
+
+/* .kbBlock { */
+/* position: absolute; */
+/* width: 96vw; */
+/* margin: 0.5rem; */
+/* } */
+
+/* .kbKey { */
+/* /\* width: 8vw; *\/ */
+/* font-size: 2rem; */
+/* color: rgba(200, 200, 80, 0.1); */
+/* display: inline-block; */
+/* /\* left: 9px; *\/ */
+/* /\* top: 9px; *\/ */
+/* padding: 2rem 0; */
+/* text-align: center; */
+/* } */
+
+#svg {
+/* position: absolute; */
+/* width: 96vw; */
+/* height: 20rem; */
+/* margin: 0.5rem; */
+/* border: solid thin grey; */
+}
