@@ -1,107 +1,108 @@
-// "use strict";
-// // --------------- Import section ---------------
-// import * as F from "../libs/useful-functions.js";
+"use strict";
+// --------------- Import section ---------------
+import * as F from "../libs/useful-functions.js";
 // TODO: link home.
+// TODO: move letters.
 
-// --------------- TEST section ---------------
-// --------------- TEST section ---------------
+// // --------------- TEST section ---------------
+// // --------------- TEST section ---------------
 
-const F = {
+// const F = {
 
-    combineByTwo: (arr, f) => {
-        for (let n = 0; n < arr.length; n++) {
-            for (let m = (n + 1); m < arr.length; m++) {
-                f( arr[n], arr[m] );
-            };
-        };
-    },
+//     combineByTwo: (arr, f) => {
+//         for (let n = 0; n < arr.length; n++) {
+//             for (let m = (n + 1); m < arr.length; m++) {
+//                 f( arr[n], arr[m] );
+//             };
+//         };
+//     },
 
-    permuteByTwo: (arr, f) => {
-        for (let n = 0; n < arr.length; n++) {
-            for (let m = 0; m < arr.length; m++) {
-                f( arr[n], arr[m] );
-            };
-        };
-    },
+//     permuteByTwo: (arr, f) => {
+//         for (let n = 0; n < arr.length; n++) {
+//             for (let m = 0; m < arr.length; m++) {
+//                 f( arr[n], arr[m] );
+//             };
+//         };
+//     },
 
-    // ---------- Working with DOM. ----------
-    html:  document.firstElementChild,
+//     // ---------- Working with DOM. ----------
+//     html:  document.firstElementChild,
     
-    // Events.
-    addEventToId:  (IdName, event, f) => document.getElementById(IdName).addEventListener(event, f),
-    removeEventFromId:  (IdName, event, f) => document.getElementById(IdName).removeEventListener(event, f),
+//     // Events.
+//     addEventToId:  (IdName, event, f) => document.getElementById(IdName).addEventListener(event, f),
+//     removeEventFromId:  (IdName, event, f) => document.getElementById(IdName).removeEventListener(event, f),
 
-    addEventToTags:  (className, tagName, event, f) => {
+//     addEventToTags:  (className, tagName, event, f) => {
 
-        const classes = document.getElementsByClassName(className);
-        for (let el of classes) {
+//         const classes = document.getElementsByClassName(className);
+//         for (let el of classes) {
 
-            const tags = el.getElementsByTagName(tagName);
-            for (let t of tags) {
-                t.addEventListener(event, f);
-            }
-        }
-    },
+//             const tags = el.getElementsByTagName(tagName);
+//             for (let t of tags) {
+//                 t.addEventListener(event, f);
+//             }
+//         }
+//     },
 
-    removeEventFromTags:  (className, tagName, event, f) => {
+//     removeEventFromTags:  (className, tagName, event, f) => {
 
-        const classes = document.getElementsByClassName(className);
-        for (let el of classes) {
+//         const classes = document.getElementsByClassName(className);
+//         for (let el of classes) {
 
-            const tags = el.getElementsByTagName(tagName);
-            for (let t of tags) {
-                t.removeEventListener(event, f);
-            }
-        }
-    },
+//             const tags = el.getElementsByTagName(tagName);
+//             for (let t of tags) {
+//                 t.removeEventListener(event, f);
+//             }
+//         }
+//     },
 
-    // Values by id.
-    idValueGet:  (idElem) => document.getElementById(idElem).value,
-    idNumberGet:  (idElem) => document.getElementById(idElem).valueAsNumber,
-    idCheckedGet:  (idElem) => document.getElementById(idElem).checked,
+//     // Values by id.
+//     idValueGet:  (idElem) => document.getElementById(idElem).value,
+//     idNumberGet:  (idElem) => document.getElementById(idElem).valueAsNumber,
+//     idCheckedGet:  (idElem) => document.getElementById(idElem).checked,
 
-    idValueSet:  (idElem, value) => document.getElementById(idElem).value = value,
-    idCheckedSet:  (idElem, bool) => document.getElementById(idElem).checked = bool,
+//     idValueSet:  (idElem, value) => document.getElementById(idElem).value = value,
+//     idCheckedSet:  (idElem, bool) => document.getElementById(idElem).checked = bool,
 
-    // Inner html.
-    innerHtmlGet:  (className, tagName) => {
+//     // Inner html.
+//     innerHtmlGet:  (className, tagName) => {
 
-        const classes = document.getElementsByClassName(className);
-        for (let el of classes) {
+//         const classes = document.getElementsByClassName(className);
+//         for (let el of classes) {
 
-            const tags = el.getElementsByTagName(tagName);
-            for (let t of tags) {
-                return t.innerHTML;
-            }
-        }
-    },
+//             const tags = el.getElementsByTagName(tagName);
+//             for (let t of tags) {
+//                 return t.innerHTML;
+//             }
+//         }
+//     },
 
-    innerHtmlSet:  (className, tagName, text) => {
+//     innerHtmlSet:  (className, tagName, text) => {
 
-        const classes = document.getElementsByClassName(className);
-        for (let el of classes) {
+//         const classes = document.getElementsByClassName(className);
+//         for (let el of classes) {
 
-            const tags = el.getElementsByTagName(tagName);
-            for (let t of tags) {
-                t.innerHTML = text;
-            }
-        }
-    },
+//             const tags = el.getElementsByTagName(tagName);
+//             for (let t of tags) {
+//                 t.innerHTML = text;
+//             }
+//         }
+//     },
 
-    // Create elements.
-    createElement:  (parent, el) => parent.appendChild( document.createElement(el) ),
-    createElementNS:  (parent, ns, el) => parent.appendChild( document.createElementNS(ns, el) ),
+//     // Create elements.
+//     createElement:  (parent, el) => parent.appendChild( document.createElement(el) ),
+//     createElementNS:  (parent, ns, el) => parent.appendChild( document.createElementNS(ns, el) ),
 
-    createDivWithAttr: (parent, attr, attrName) => {
-        const div = document.createElement("div");
-        div.setAttribute(attr, attrName);
-        parent.appendChild(div);
-        return div;
-    }
-};
-F.body = F.html.lastElementChild;
+//     createDivWithAttr: (parent, attr, attrName) => {
+//         const div = document.createElement("div");
+//         div.setAttribute(attr, attrName);
+//         parent.appendChild(div);
+//         return div;
+//     }
+// };
+// F.body = F.html.lastElementChild;
 
-// --------------- TEST section ---------------
+// // --------------- TEST section ---------------
 
 
 
@@ -146,7 +147,7 @@ const countLettersFrequency = (text, letters) => {
     return temp;
 };
 
-const layoutArr = (lang) => {
+const layoutSwitch = (lang) => {
 
     switch (lang) { // TODO: other layouts. TODO: Maltron.
     case "dvorak": return ([ "'", ",", ".", "p", "y", "f", "g", "c", "r", "l", "/", "=",
@@ -188,12 +189,15 @@ const layoutArr = (lang) => {
                           "ц", "ч", "ш", "щ", "ь", "ы", "ъ", "э", "ю", "я" ]); break;
     }
 };
+const layoutNames = [ "ycukeng", "qwerty", "dvorak", "colemak", "colemak_modDH", "workman", "capewell", "abc", "abv" ];
 
 // --------------- TEST section ---------------
-const text_en = "The moon shone bright; a sprinkling of snow covered the ground, and I reflected that she might, possibly, have taken it into her head to walk about the garden, for refreshment. I did detect a figure creeping along the inner fence of the park; but it was not my young mistress: on its emerging into the light, I recognised one of the grooms. He stood a considerable period, viewing the carriage-road through the grounds; then started off at a brisk pace, as if he had detected something, and reappeared presently, leading Miss's pony; and there she was, just dismounted, and walking by its side. The man took his charge stealthily across the grass towards the stable. Cathy entered by the casement-window of the drawing-room, and glided noiselessly up to where I awaited her. She put the door gently too, slipped off her snowy shoes, untied her hat, and was proceeding, unconscious of my espionage, to lay aside her mantle, when I suddenly rose and revealed myself. The surprise petrified her an instant: she uttered an inarticulate exclamation, and stood fixed.";
+const textSwitch = (text) => {
+    switch (text) {
 
-// --------------- TEST section ---------------
-const text_ru = `Не помню, сколько времени простоял на табуретке с веревкой на шее. Наверное долго. Помню, что по лицу текли слезы, и ссадина на подбородке пощипывала. А потом я услышал, как в прихожей щелкнул замок. Звук показался громким как выстрел. И тогда я страшно испугался. А чего испугался - не знаю, но прямо сердце остановилось. Чего можно испугаться, когда уже стоишь с петлей на шее? Синтия не должна была сегодня прийти, но она пришла, словно что-то почувствовала. Потом я до утра рыдал на плече у Синтии, а она меня утешала, и говорила, что все наладится, что у меня стресс, и что у нее есть прекрасный знакомый врач, доктор Харви, и она завтра же ему позвонит, и обязательно меня к нему отведет, и он подберет мне лучшие в мире лекарства...
+    case "text_en": return "The moon shone bright; a sprinkling of snow covered the ground, and I reflected that she might, possibly, have taken it into her head to walk about the garden, for refreshment. I did detect a figure creeping along the inner fence of the park; but it was not my young mistress: on its emerging into the light, I recognised one of the grooms. He stood a considerable period, viewing the carriage-road through the grounds; then started off at a brisk pace, as if he had detected something, and reappeared presently, leading Miss's pony; and there she was, just dismounted, and walking by its side. The man took his charge stealthily across the grass towards the stable. Cathy entered by the casement-window of the drawing-room, and glided noiselessly up to where I awaited her. She put the door gently too, slipped off her snowy shoes, untied her hat, and was proceeding, unconscious of my espionage, to lay aside her mantle, when I suddenly rose and revealed myself. The surprise petrified her an instant: she uttered an inarticulate exclamation, and stood fixed."; break;
+
+    case "text_ru": return `Не помню, сколько времени простоял на табуретке с веревкой на шее. Наверное долго. Помню, что по лицу текли слезы, и ссадина на подбородке пощипывала. А потом я услышал, как в прихожей щелкнул замок. Звук показался громким как выстрел. И тогда я страшно испугался. А чего испугался - не знаю, но прямо сердце остановилось. Чего можно испугаться, когда уже стоишь с петлей на шее? Синтия не должна была сегодня прийти, но она пришла, словно что-то почувствовала. Потом я до утра рыдал на плече у Синтии, а она меня утешала, и говорила, что все наладится, что у меня стресс, и что у нее есть прекрасный знакомый врач, доктор Харви, и она завтра же ему позвонит, и обязательно меня к нему отведет, и он подберет мне лучшие в мире лекарства...
 
 Синтия сдержала слово - созвонилась с этим Харви и наутро повезла меня в Кембридж. После всего пережитого мне было все равно - я не верил, что какой-то доктор Харви сможет мне помочь.
 
@@ -202,7 +206,10 @@ const text_ru = `Не помню, сколько времени простоял
 Мы шли вдоль каналов, а мимо все время проплывали спортивные байдарки, словно торопились на нерест. Сам Харви тоже выглядел спортивно - быстрый, энергичный, высокого роста. Я со своим весом и одышкой снова чувствовал себя лишним в этом мире и думал, что наверно зря Синтия сняла меня с табуретки. Сперва мы говорили ни о чем - о погоде, о Лондоне, о брексите и выборах в Италии.
 
 Мне думалось, что Харви сильно старше меня. Но потом я подумал, что мы ровесники. А потом заметил, что в его хорошо поставленном голосе и красивых энергичных жестах проскакивает чуть больше энергии, увлеченности и интереса ко всему окружающему, чем это принято у настоящих взрослых, даже таких бестолковых, как я. И понял, что доктор Харви - почти мальчишка.`;
+    }
+};
 
+const textNames = [ "text_en", "text_ru" ]; // TODO fetch some texts.
 
 // --------------- Infographics section ---------------
 
@@ -212,8 +219,8 @@ const svgNS = svg.namespaceURI;
 
 svg.setAttributeNS(null, "id", "svg");
 svg.setAttributeNS(null, "width", "100vw");
-svg.setAttributeNS(null, "height", "100vh");
-svg.setAttributeNS(null, "viewBox", "0 0 130 40");
+svg.setAttributeNS(null, "height", "40rem"); // TODO sizes.
+svg.setAttributeNS(null, "viewBox", "0 0 130 50");
 svg.setAttributeNS(null, "preserveAspectRatio", "xMidYMin");
 
 const svgLine = (fromX, fromY, toX, toY, width, color, id) => {
@@ -231,7 +238,7 @@ const svgLine = (fromX, fromY, toX, toY, width, color, id) => {
 };
 
 const svgRect = (x, y, width, height, rx, ry, strokeWidth, color, id) => {
-    const temp = F.createElementNS(svg, svgNS, "line");
+    const temp = F.createElementNS(svg, svgNS, "rect");
 
     temp.setAttributeNS(null, "x", x);
     temp.setAttributeNS(null, "y", y);
@@ -259,12 +266,12 @@ const svgBezierQ = (fromX, fromY, controlX, controlY, toX, toY, width, color, id
     return temp;
 };
 
-const svgTextMiddle = (x, y, text, id, color = "white") => {
+const svgTextMiddle = (x, y, text, id, color, fontSize = "50%") => {
     const temp = F.createElementNS(svg, svgNS, "text");
 
     temp.setAttributeNS(null, "text-anchor", "middle");
     temp.setAttributeNS(null, "baseline-shift", "-20%");    
-    temp.setAttributeNS(null, "font-size", "50%");
+    temp.setAttributeNS(null, "font-size", fontSize);
     
     temp.setAttributeNS(null, "x", x);
     temp.setAttributeNS(null, "y", y);
@@ -302,35 +309,33 @@ const drawLetters = (layout) => {
 };
 
 // TEST
-// const kbKeys = drawLetters( layoutArr("dvorak"));
+// const kbKeys = drawLetters( layoutSwitch("dvorak"));
 
 // TODO adjust weights, verticals are too yellow.
 const lineColor = (x1, y1, x2, y2) => {
-    let h = 120, a = 1;
+    let h = 120, s = 0, l = 100, a = 0.3;
 
     // Rows.
     if (y1 !== y2) {
-        if ( (y1 === 20) || (y2 === 20) ) { h -= 10; }
-        else { h -= 30; }
+        if ( (y1 === 20) || (y2 === 20) ) { h = 80, s = 30, l = 50, a = 0.6; }
+        else { h = 50, s = 100, l = 50, a = 1; }
     }
 
     // Fingers.
-    if (x1 === x2) { h -= 50; }
+    if (x1 === x2) { h = 30, s = 100, l = 50, a = 1; }
 
     // Blocks.
     if ( (x1 === 50) || (x1 === 60) || (x1 > 100) ) {
-        h -= 50;
-        if ( (x2 === 50) || (x2 === 60) || (x2 > 100) ) { h = 0; }
+        h = 30, s = 100, l = 50, a = 0.7;
+        if ( (x2 === 50) || (x2 === 60) || (x2 > 100) ) { h = 0, s = 100, l = 50, a = 1; }
     }
 
-    if ( h > 100 ) { a = 0.2; }
+    // if ( h > 100 ) { a = 0.2; }
 
-    return `hsla( ${h}, 100%, 50%, ${a})`;
+    return `hsla( ${h}, ${s}%, ${l}%, ${a})`;
 };
 
 const drawCombinations = (text, layout) => {
-
-    // svg.innerHTML = null;       // TODO place to a proper position.
 
     const letters = countLettersFrequency(text, lettersCombined(layout));
 
@@ -361,22 +366,38 @@ const drawCombinations = (text, layout) => {
                     width(n),
                     lineColor( from(n).x, from(n).y,
                                to(n).x, to(n).y ),
-                    // "white",
                     letters[n][0] );
 
     }
 };
 
-// TEST
-const tt = (text, layout) => ( drawLetters( layoutArr(layout)),
-                               drawCombinations( text, layoutArr(layout) ));
 
-tt( text_ru, "ycukeng" );
-// tt( text_en, "qwerty" );
-// tt( text_en, "dvorak" );
-// tt( text_en, "colemak" );
-// tt( text_en, "colemak_modDH" );
-// tt( text_en, "workman" );
-// tt( text_en, "capewell" );
-// tt( text_en, "abc" );
-// tt( text_ru, "abv" );
+// --------------- Controls section ---------------
+const htmlButton = (parent, label) => {
+    const temp = F.createElement(parent, "button");
+    temp.setAttribute("id", "button_" + label);
+    temp.style.margin = "1.5rem";
+    temp.innerHTML = label;
+    return temp;
+};
+
+const htmlSelect = (parent, name, ...values) => {
+    const temp = F.createElement(parent, "select");
+    temp.setAttribute("id", "select_" + name);
+    temp.style.margin = "1.5rem";
+
+    values.forEach( (v) => ( F.createElement(temp, "option").innerHTML = v ) );
+
+    return temp;
+};
+
+const layoutSelect = htmlSelect(F.html, "layoutSelect", ...layoutNames);
+const textSelect = htmlSelect(F.html, "textSelect", ...textNames);
+
+const buttonGo = htmlButton(F.html, "Go");
+
+const visualise = () => ( svg.innerHTML = null,
+                          drawLetters( layoutSwitch(layoutSelect.value)),
+                          drawCombinations( textSwitch(textSelect.value), layoutSwitch(layoutSelect.value) ));
+
+buttonGo.addEventListener("click", visualise);
