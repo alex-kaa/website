@@ -4,8 +4,8 @@ import * as F from "../libs/useful-functions.js";
 // TODO: link home.
 // TODO: move letters.
 
-// // --------------- TEST section ---------------
-// // --------------- TEST section ---------------
+// --------------- TEST section ---------------
+// --------------- TEST section ---------------
 
 // const F = {
 
@@ -102,7 +102,7 @@ import * as F from "../libs/useful-functions.js";
 // };
 // F.body = F.html.lastElementChild;
 
-// // --------------- TEST section ---------------
+// --------------- TEST section ---------------
 
 
 
@@ -180,16 +180,16 @@ const layoutSwitch = (lang) => {
 
     // Slightly different from ordinary "йцукенг".
     // But the misplaced letters are so rare it doesn't matter.
-    case "ycukeng": return ([ "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ",
+    case "йцукенг": return ([ "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ",
                               "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э",
                               "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", "ё" ]); break;
 
-    case "abv": return ([ "а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к",
+    case "абв": return ([ "а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к",
                           "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х",
                           "ц", "ч", "ш", "щ", "ь", "ы", "ъ", "э", "ю", "я" ]); break;
     }
 };
-const layoutNames = [ "ycukeng", "qwerty", "dvorak", "colemak", "colemak_modDH", "workman", "capewell", "abc", "abv" ];
+const layoutNames = [ "qwerty", "dvorak", "colemak", "colemak_modDH", "workman", "capewell", "abc", "йцукенг", "абв" ];
 
 // --------------- TEST section ---------------
 const textSwitch = (text) => {
@@ -296,8 +296,9 @@ const drawLetters = (layout) => {
         temp.push( svgTextMiddle( x, y,
                                   layout[n],
                                   layout[n],
-                                  "#1a0d00"
+                                  // "#1a0d00"
                                   // "brown"
+                                  "grey"
                                 ));
         x += 10;
 
